@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { matchedData } = require("express-validator");
-const storages = require("../models/nosql/storage");
+const {storageModel} = require("../models");
 const { handleHttpError } = require("../utils/handleError");
 const PUBLIC_URL = process.env.PUBLIC_URL;
 const MEDIA_PATH = `${__dirname}/../storage`;
@@ -13,7 +13,7 @@ const MEDIA_PATH = `${__dirname}/../storage`;
  */
 const getItems = async (req, res) => {
   try {
-    const data = await storages.find({}); //this is a promise, so we use async await
+    const data = await storageModel.find({}); //this is a promise, so we use async await
     res.send({ data });
   } catch (error) {
     console.log(error);
@@ -29,7 +29,7 @@ const getItems = async (req, res) => {
 const getItem = async (req, res) => {
   try {
     req = matchedData(req);
-    const data = await storages.findById(req.id);
+    const data = await storageModel.findById(req.id);
     res.send({ data });
   } catch (error) {
     console.log(error);
@@ -49,7 +49,7 @@ const createItem = async (req, res) => {
       filename: file.filename,
       url: `${PUBLIC_URL}/${file.filename}`,
     };
-    const data = await storages.create(fileData);
+    const data = await storageModel.create(fileData);
     res.send({ data });
   } catch (error) {
     console.log(error);
@@ -66,8 +66,8 @@ const createItem = async (req, res) => {
 const deleteItem = async (req, res) => {
   try {
     const {id} = matchedData(req);
-    const datafile = await storages.findById(id);
-    await storages.delete({ _id: id });
+    const datafile = await storageModel.findById(id);
+    await storageModel.delete({ _id: id });
     const filePath = `${MEDIA_PATH}/${datafile.filename}`;
     //fs.unlinkSync(filePath);
     const data = {

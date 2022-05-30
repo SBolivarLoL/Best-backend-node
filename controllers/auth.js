@@ -2,7 +2,7 @@ const { matchedData } = require("express-validator");
 const { tokenSign } = require("../utils/handleJwt");
 const { encrypt, compare } = require("../utils/handlePassword");
 const { handleHttpError } = require("../utils/handleError");
-const users = require("../models/nosql/users");
+const {usersModel} = require("../models");
 
 /**
  * Controlador de registro de usuarios
@@ -14,7 +14,7 @@ const registerCtrl = async (req, res) => {
       req = matchedData(req);
       const passwordHash = await encrypt(req.password);
       const body = { ...req, password: passwordHash };
-      const dataUser = await users.create(body);
+      const dataUser = await usersModel.create(body);
       dataUser.set("password", undefined, { strict: false });
       const data = {
         token: await tokenSign(dataUser),
@@ -30,7 +30,7 @@ const registerCtrl = async (req, res) => {
 const loginCtrl = async (req, res) => {
   try {
     req = matchedData(req);
-    const user = await users.findOne({ email: req.email }).select("password name role email");//como antes definimos que la contraseña no se iba a mostrar en el json, tenemos que seleccionarla ahora para usarla y que no sea undefined
+    const user = await usersModel.findOne({ email: req.email });
     if (!user) {
       handleHttpError(res, "El usuario no existe", 404);
       return;

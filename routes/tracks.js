@@ -15,7 +15,7 @@ router.get("/", authMiddleware, getItems);
 router.get("/:id", authMiddleware, validatorGetItem, getItem);
 
 //create un track
-router.post("/", authMiddleware, checkRole(["admin"]), validatorCreateItem, createItem);
+router.post("/", authMiddleware, checkRole(["user", "admin"]), validatorCreateItem, createItem);
 
 //update un track
 router.put("/:id", authMiddleware, validatorGetItem, validatorCreateItem, updateItem);//como es casi igual que el getItem, validamos el id igual

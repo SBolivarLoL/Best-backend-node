@@ -1,6 +1,8 @@
-const users = require("../models/nosql/users");
+const { usersModel } = require("../models");
 const { handleHttpError } = require("../utils/handleError");
 const { verifyToken } = require("../utils/handleJwt");
+const getProperties = require("../utils/handleEngineProperties");
+const propertiesKey = getProperties();
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -11,11 +13,16 @@ const authMiddleware = async (req, res, next) => {
     const token = req.headers.authorization.split(" ").pop();
     const dataToken = await verifyToken(token);
 
-    if (!dataToken._id) {
-      handleHttpError(res, "Token no válido", 401);
+    if(!dataToken) {
+      handleHttpError(res, "No Payload Data", 401);
       return;
     }
-    const user = await users.findById(dataToken._id);
+
+    const query = {
+      [propertiesKey.id]: dataToken[propertiesKey.id]
+    }
+
+    const user = await usersModel.findOne(query);
     req.user = user;
     next();
   } catch (error) {

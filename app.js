@@ -2,9 +2,12 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const morganBody = require("morgan-body");
-const dbconnection = require('./config/mongo');
+const dbconnectionNoSQL = require('./config/mongo');
 const loggerStream = require("./utils/handleLogger");
+const { mysqlDbConnection } = require("./config/mysql");
 const app = express();
+
+const ENGINE_DB = process.env.ENGINE_DB;
 
 app.use(cors());
 app.use(express.json());
@@ -28,4 +31,4 @@ app.listen(PORT, () => {
   console.log(`Server listening at port ${PORT}`);
 });
 
-dbconnection();
+ENGINE_DB === "nosql" ? dbconnectionNoSQL() : mysqlDbConnection();

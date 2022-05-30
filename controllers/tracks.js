@@ -1,5 +1,5 @@
 const { matchedData } = require("express-validator");
-const tracks = require("../models/nosql/tracks");
+const { tracksModel } = require("../models");
 const { handleHttpError } = require("../utils/handleError");
 
 
@@ -12,7 +12,7 @@ const { handleHttpError } = require("../utils/handleError");
 const getItems = async (req, res) => {
   try {
     const user = req.user;// sacamos el usuario de la sesion para tener mejor trazabilidad
-    const data = await tracks.find({}); //this is a promise, so we use async await
+    const data = await tracksModel.findAllData({}); //this is a promise, so we use async await
     res.send({ data, user });
   } catch (error) {
     handleHttpError(res, error);
@@ -29,7 +29,7 @@ const getItems = async (req, res) => {
 const getItem = async (req, res) => {
   try {
     req = matchedData(req);
-    const data = await tracks.findById(req.id);
+    const data = await tracksModel.findOneData(req.id);
     res.send({ data });
   } catch (error) {
     handleHttpError(res, "Error al obtener el registro");
@@ -44,7 +44,7 @@ const getItem = async (req, res) => {
 const createItem = async (req, res) => {
   try {
     const body = matchedData(req);
-    const data = await tracks.create(body);
+    const data = await tracksModel.create(body);
     res.send({ data });
   } catch (error) {
     handleHttpError(res, "Error al crear el registro");
@@ -59,7 +59,7 @@ const createItem = async (req, res) => {
 const updateItem = async (req, res) => {
   try {
     const {id, ...body} = matchedData(req);
-    const data = await tracks.findOneAndUpdate(
+    const data = await tracksModel.findOneAndUpdate(
       id, body
     );
     res.send({ data });
@@ -76,7 +76,7 @@ const updateItem = async (req, res) => {
 const deleteItem = async (req, res) => {
   try {
     const {id} = matchedData(req);
-    const data = await tracks.delete({ _id: id });
+    const data = await tracksModel.delete({ _id: id });
     res.send({ data });
   } catch (error) {
     console.log(error);
