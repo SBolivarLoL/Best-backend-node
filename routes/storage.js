@@ -13,6 +13,7 @@ const { validatorGetItem } = require("../validators/storage");
  * This part of the code should be in a separate file
  * but for some reason it is not working there
  */
+/* Creating a storage object that will be used by multer to store the file in the server. */
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
     const pathStorage = `${__dirname}/../storage`;
@@ -25,6 +26,8 @@ const storage = multer.diskStorage({
   },
 });
 
+/* Creating a middleware that will be used by the route `router.post("/",
+uploadMiddleware.single("myfile"), createItem);` to upload the file. */
 const uploadMiddleware = multer({ storage });
 /**
  *

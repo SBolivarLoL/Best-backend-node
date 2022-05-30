@@ -1,9 +1,9 @@
 const { handleHttpError } = require("../utils/handleError");
 
 /**
- * array con los roles permitidos
- * @param {*} role
- * @returns
+ * If the user has the role of "admin" or "user" then allow them to continue, otherwise throw an error.
+ * @param role - is an array of roles that the user can have.
+ * @returns The function checkRole is being returned.
  */
 const checkRole = (role) => (req, res, next) => {
   try {

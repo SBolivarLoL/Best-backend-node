@@ -2,7 +2,6 @@ const { matchedData } = require("express-validator");
 const { tracksModel } = require("../models");
 const { handleHttpError } = require("../utils/handleError");
 
-
 /**
  * Get a list of the DB
  * @param {*} req
@@ -11,14 +10,12 @@ const { handleHttpError } = require("../utils/handleError");
 
 const getItems = async (req, res) => {
   try {
-    const user = req.user;// sacamos el usuario de la sesion para tener mejor trazabilidad
+    const user = req.user; // sacamos el usuario de la sesion para tener mejor trazabilidad
     const data = await tracksModel.findAllData({}); //this is a promise, so we use async await
     res.send({ data, user });
   } catch (error) {
     handleHttpError(res, error);
   }
-
-
 };
 
 /**
@@ -49,7 +46,7 @@ const createItem = async (req, res) => {
   } catch (error) {
     handleHttpError(res, "Error al crear el registro");
   }
-}
+};
 
 /**
  * Update a record
@@ -58,10 +55,8 @@ const createItem = async (req, res) => {
  */
 const updateItem = async (req, res) => {
   try {
-    const {id, ...body} = matchedData(req);
-    const data = await tracksModel.findOneAndUpdate(
-      id, body
-    );
+    const { id, ...body } = matchedData(req);
+    const data = await tracksModel.findOneAndUpdate(id, body);
     res.send({ data });
   } catch (error) {
     handleHttpError(res, "Error al actualizar el registro");
@@ -75,7 +70,7 @@ const updateItem = async (req, res) => {
  */
 const deleteItem = async (req, res) => {
   try {
-    const {id} = matchedData(req);
+    const { id } = matchedData(req);
     const data = await tracksModel.delete({ _id: id });
     res.send({ data });
   } catch (error) {
@@ -84,11 +79,10 @@ const deleteItem = async (req, res) => {
   }
 };
 
-
 module.exports = {
   getItems,
   getItem,
   createItem,
   updateItem,
-  deleteItem
-}
+  deleteItem,
+};
