@@ -9,6 +9,7 @@
 
 
 ### Dependencies
+- JSON Web Token
 - Sequelize
 - Express-validator
 - Nodemon (development dependency)
